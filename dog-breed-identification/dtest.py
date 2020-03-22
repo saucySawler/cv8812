@@ -39,4 +39,4 @@ print(breed_set)
 
 def label_img(name):
     word_label = name.split('-')[0]
-    if word_label == 'golden_retriever' : return np.array([0, 0, 0, 0, 0, 0, 0, 0])
+    if word_label == 'golden_retriever' : return np.array([0, 0, 0, 0, 0, 0, 0, 1])

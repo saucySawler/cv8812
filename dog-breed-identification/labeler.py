@@ -7,7 +7,7 @@ import imageio
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 
-DIR = './train'
+DIR = './test'
 
 
 naming_dict = {} # id: breed
@@ -30,3 +30,12 @@ le.fit(breed_list)
 print(le.classes_)
 breed_tf = le.transform(breed_list)
 print(breed_tf)
+
+for img in os.listdir(DIR):
+    imgName = img.split('.')[0] # converts '0913209.jpg' --> '0913209'
+    label = naming_dict[str(imgName)]
+    counting_dict[label] += 1
+    path = os.path.join(DIR, img)
+    saveName = './labeled_test/' + label + '-' + str(counting_dict[label]) + '.jpg'
+    image_data = np.array(Image.open(path))
+    imageio.imwrite(saveName, image_data)
