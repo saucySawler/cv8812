@@ -27,9 +27,8 @@ for i in breed_set:
 breed_list = list(breed_set)
 le = preprocessing.LabelEncoder()
 le.fit(breed_list)
-print(le.classes_)
 breed_tf = le.transform(breed_list)
-print(breed_tf)
+
 
 for img in os.listdir(DIR):
     imgName = img.split('.')[0] # converts '0913209.jpg' --> '0913209'

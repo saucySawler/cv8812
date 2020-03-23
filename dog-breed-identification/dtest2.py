@@ -34,9 +34,9 @@ get_size_statistics()
 def label_img(name):
     word_label = name.split('-')[0]
     print(word_label)
-    if word_label == 'golden_retriever': return np.array([1, 0])
-    elif word_label != 'golden_retriever' : return np.array([0, 1])
-    #elif word_label == 'shetland_sheepdog' : return np.array([0, 1])
+    if word_label == 'golden_retriever': return np.array([0, 0, 0])
+    elif word_label == 'shetland_sheepdog' : return np.array([0, 1, 0])
+    elif word_label != 'golden_retriever' or 'shetland_sheepdog' : return np.array([1, 1, 1])
 
 
 
@@ -58,7 +58,7 @@ def load_training_data():
     return train_data
 
 train_data = load_training_data()
-plt.imshow(train_data[43][0], cmap = 'gist_gray')
+# plt.imshow(train_data[43][0], cmap = 'gist_gray')
 
 #print(train_data)
 
@@ -93,13 +93,13 @@ model.add(Flatten())
 model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(128, activation='relu'))
-#model.add(Dropout(0.3))
-model.add(Dense(2, activation = 'softmax'))
+model.add(Dropout(0.3))
+model.add(Dense(3, activation = 'softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics = ['accuracy'])
 model.fit(trainImages, trainLabels, batch_size = 50, epochs = 5, verbose = 1)
 
-TEST_DIR = './test'
+TEST_DIR = './labeled_train'
 def load_test_data():
     test_data = []
     for img in os.listdir(TEST_DIR):
@@ -115,7 +115,7 @@ def load_test_data():
 
 
 test_data = load_test_data()    
-plt.imshow(test_data[10][0], cmap = 'gist_gray')
+# plt.imshow(test_data[10][0], cmap = 'gist_gray')
 
 
 
