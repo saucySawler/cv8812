@@ -803,12 +803,12 @@ model.add(Dropout(0.3))
 model.add(Dense(121, activation = 'softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics = ['accuracy'])
-model.fit(trainImages, trainLabels, batch_size = 121, epochs = 3, verbose = 1)
+model.fit(trainImages, trainLabels, batch_size = 62, epochs = 10, verbose = 1)
 
 TEST_DIR = './labeled_train'
 TEST_DIR2 = './test'
 
-def load_test_data(direc):
+def load_test_data(direc, test_data):
     test_data = []
     for img in os.listdir(direc):
         label = label_img(img)
@@ -821,19 +821,17 @@ def load_test_data(direc):
     shuffle(test_data)
     return test_data
 
-
-test_data = load_test_data(TEST_DIR)
-TDIR2 = load_test_data(TEST_DIR2)
-
+test_data = []
+test_data = load_test_data(TEST_DIR, test_data)
+TDIR2 = []
+TDIR2 = load_test_data(TEST_DIR2, TDIR2)
+testImages2 = np.array([i[0] for i in TDIR2]).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
 testImages = np.array([i[0] for i in test_data]).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
 testLabels = np.array([i[1] for i in test_data])
-testImages2 = np.array([i[0] for i in TDIR2]).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
-
 
 loss, acc = model.evaluate(testImages, testLabels, verbose = 0)
 print(acc * 100)
-# t_image = testImages
-# t_image = np.reshape(t_image, [1, 300, 300, 1])
+
 classes = model.predict_classes(testImages)
 classes2 = model.predict_classes(testImages2)
 
