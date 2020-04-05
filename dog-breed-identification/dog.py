@@ -4,7 +4,7 @@ import os
 from random import shuffle
 import matplotlib.pyplot as plt
 
-DIR = './train'
+DIR = './labeled_train'
 
 # Want to know how we should format the height x width image data dimensions
 # for inputting to a keras model
@@ -35,8 +35,9 @@ get_size_statistics()
 
 def label_img(name):
     word_label = name.split('-')[0]
-    if word_label == 'golden_retriever': return np.array([1, 0])
-    elif word_label == 'shetland_sheepdog' : return np.array([0, 1])
+    if word_label == 'golden_retriever': return np.array([0, 1])
+    elif word_label == 'shetland_sheepdog' : return np.array([1, 0])
+    elif word_label != 'shetland_sheepdog' : return np.array([0, 0])
 
 
 IMG_SIZE = 300
@@ -45,6 +46,8 @@ def load_training_data():
     train_data = []
     for img in os.listdir(DIR):
         label = label_img(img)
+        print(img)
+        print(label)
         path = os.path.join(DIR, img)
         if "DS_Store" not in path:
             img = Image.open(path)
