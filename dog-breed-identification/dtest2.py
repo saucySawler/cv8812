@@ -808,7 +808,7 @@ model.add(Dropout(0.3))
 model.add(Dense(121, activation = 'softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics = ['accuracy'])
-model.fit(trainImages, trainLabels, batch_size = 62, epochs = 1, verbose = 1)
+model.fit(trainImages, trainLabels, batch_size = 50, epochs = 1, verbose = 1)
 
 TEST_DIR = './labeled_train'
 TEST_DIR2 = './test'
@@ -841,21 +841,32 @@ testLabels = np.array([i[1] for i in test_data])
 loss, acc = model.evaluate(testImages, testLabels, verbose = 0)
 print(acc * 100)
 
+# Serialize model to YAML
+
+model_yaml = model.to_yaml()
+with open("classifier.yaml", "w") as yaml_file:
+    yaml_file.write(model_yaml)
+
+# Serialize weights to HDF5
+
+model.save_weights("classifier.h5")
+print("Saved model to disk.")
+
 classes = model.predict_classes(testImages)
 classes2 = model.predict_classes(testImages2)
 
 
 # for img in os.listdir(TEST_DIR):
 # 	print(img)
-for i in classes:
-	print(files[i])
-	print(testnames[i])
-	print(classes[i])
+#for i in classes:
+#	print(files[i])
+#	print(testnames[i])
+#	print(classes[i])
 
 # for i in classes2:
 # 	print(classes[i])
 
-print(classes)
+#print(classes)
 #print(classes2)
 
-print(acc*100)
+#print(acc*100)
