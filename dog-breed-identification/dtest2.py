@@ -10,11 +10,16 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers. normalization import BatchNormalization
 import numpy as np
+import tensorflow
 
 DIR = './labeled_train'
+testnames = []
+files = []
 
 def label_img(name):
 	word_label = name.split('-')[0]
+	testnames.append([word_label])
+	files.append([name])
 	print(word_label)
 	if word_label == 'scottish_deerhound' : return np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -803,10 +808,14 @@ model.add(Dropout(0.3))
 model.add(Dense(121, activation = 'softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics = ['accuracy'])
-model.fit(trainImages, trainLabels, batch_size = 62, epochs = 10, verbose = 1)
+model.fit(trainImages, trainLabels, batch_size = 62, epochs = 1, verbose = 1)
 
 TEST_DIR = './labeled_train'
 TEST_DIR2 = './test'
+del testnames
+testnames = []
+del files
+files = []
 
 def load_test_data(direc, test_data):
     test_data = []
@@ -839,10 +848,14 @@ classes2 = model.predict_classes(testImages2)
 # for img in os.listdir(TEST_DIR):
 # 	print(img)
 for i in classes:
+	print(files[i])
+	print(testnames[i])
 	print(classes[i])
 
-for i in classes2:
-	print(classes[i])
+# for i in classes2:
+# 	print(classes[i])
 
 print(classes)
-print(classes2)
+#print(classes2)
+
+print(acc*100)
