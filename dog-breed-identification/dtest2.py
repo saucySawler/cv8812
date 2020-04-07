@@ -1,3 +1,17 @@
+#################################################################################################
+#
+# Project		: Dog Breed Classifier
+# Program Name	: dtest2.py
+# Authors		: Sakif Mohammed and Clayton Sawler
+# Course		: Engineering 8814 - Computer Vision
+# Date			: April 7, 2020
+# Purpose		: Loads a trained model to classify images of dogs into breeds.
+# Creates		: classifier.h5, calssifier.yaml
+#
+#################################################################################################
+
+
+
 from PIL import Image
 import numpy as np
 import os
@@ -12,9 +26,14 @@ from keras.layers. normalization import BatchNormalization
 import numpy as np
 import tensorflow
 
+
+#Training directories and place holder arrays for identification later
+
 DIR = './labeled_train'
 testnames = []
 files = []
+
+# Labeling_img takes in photo name, splits name (i.e. image_1.jpg -> image_1) and returns 1 hot label
 
 def label_img(name):
 	word_label = name.split('-')[0]
@@ -754,8 +773,11 @@ def label_img(name):
 	       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
+
+# Define image size for model
 IMG_SIZE = 300
 
+# Load training data from DIR [4]
 def load_training_data():
     train_data = []
     for img in os.listdir(DIR):
@@ -773,12 +795,12 @@ def load_training_data():
 
 train_data = load_training_data()
 
-#print(train_data)
-
 #Reshape data to 1d array i.e. split images to 3 colour channels
 
 trainImages = np.array([i[0] for i in train_data]).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
 trainLabels = np.array([i[1] for i in train_data])
+
+#Model based on LeNet-5 6 sets Conv2D,MaxPooling2D,BatchNormalization output 1x121
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size = (3, 3), activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 1)))
@@ -807,9 +829,11 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.3))
 model.add(Dense(121, activation = 'softmax'))
 
+#Compile model
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics = ['accuracy'])
-model.fit(trainImages, trainLabels, batch_size = 50, epochs = 1, verbose = 1)
+model.fit(trainImages, trainLabels, batch_size = 50, epochs = 6, verbose = 1)
 
+#Testing data
 TEST_DIR = './labeled_train'
 TEST_DIR2 = './test'
 del testnames
@@ -817,6 +841,7 @@ testnames = []
 del files
 files = []
 
+#load training data based on directory, container [4]
 def load_test_data(direc, test_data):
     test_data = []
     for img in os.listdir(direc):
@@ -852,21 +877,4 @@ with open("classifier.yaml", "w") as yaml_file:
 model.save_weights("classifier.h5")
 print("Saved model to disk.")
 
-classes = model.predict_classes(testImages)
-classes2 = model.predict_classes(testImages2)
 
-
-# for img in os.listdir(TEST_DIR):
-# 	print(img)
-#for i in classes:
-#	print(files[i])
-#	print(testnames[i])
-#	print(classes[i])
-
-# for i in classes2:
-# 	print(classes[i])
-
-#print(classes)
-#print(classes2)
-
-#print(acc*100)
